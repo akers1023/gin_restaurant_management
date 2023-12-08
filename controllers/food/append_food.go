@@ -16,8 +16,6 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-var validate = validator.New()
-
 
 func round(num float64) int {
 	return int(num + math.Copysign(0.5, num))
@@ -40,7 +38,7 @@ func CreateFood() gin.HandlerFunc {
 			return
 		}
 
-		validationErr := validate.Struct(food)
+		validationErr := validator.New().Struct(food)
 		if validationErr != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": validationErr.Error()})
 			return
