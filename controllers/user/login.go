@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	collection "restaurant_management/controllers/collections"
 	helper "restaurant_management/helpers"
 	"restaurant_management/models"
 	"time"
@@ -51,7 +52,7 @@ func Login() gin.HandlerFunc{
 			return 
 		}
 
-		err := userCollection.FindOne(ctx, bson.M{"email":user.Email}).Decode(&foundUser)
+		err := collection.UserCollection.FindOne(ctx, bson.M{"email":user.Email}).Decode(&foundUser)
 		defer cancel()
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error":"email or password is incorrect"})
@@ -70,7 +71,7 @@ func Login() gin.HandlerFunc{
 		}
 		token, refreshToken, _ := helper.GenerateAllTokens(*foundUser.Email, *foundUser.First_name, *foundUser.Last_name, *foundUser.User_type, foundUser.User_id)
 		helper.UpdateAllTokens(token, refreshToken, foundUser.User_id)
-		err = userCollection.FindOne(ctx, bson.M{"user_id":foundUser.User_id}).Decode(&foundUser)
+		err = collection.UserCollection.FindOne(ctx, bson.M{"user_id":foundUser.User_id}).Decode(&foundUser)
 
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})

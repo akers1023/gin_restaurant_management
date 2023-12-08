@@ -3,6 +3,8 @@ package controllers
 import (
 	"context"
 	"net/http"
+
+	collection "restaurant_management/controllers/collections"
 	helper "restaurant_management/helpers"
 	"restaurant_management/models"
 	"time"
@@ -22,7 +24,7 @@ func GetUser() gin.HandlerFunc {
 		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
 
 		var user models.User
-		err := userCollection.FindOne(ctx, bson.M{"user_id": userId}).Decode(&user)
+		err := collection.UserCollection.FindOne(ctx, bson.M{"user_id": userId}).Decode(&user)
 		defer cancel()
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
