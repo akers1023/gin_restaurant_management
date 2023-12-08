@@ -4,7 +4,7 @@ import (
 	"log"
 	"os"
 
-	// "restaurant_management/database"
+	"restaurant_management/middleware"
 	"restaurant_management/routes"
 
 	"github.com/gin-gonic/gin"
@@ -29,15 +29,14 @@ func main() {
 
 	router := gin.New()
 	router.Use(gin.Logger())
+	router.Use(middleware.Authenticate())
 
 	routes.AuthRoutes(router)
 	routes.UserRoutes(router)
 
-	// routes.UserRoutes(router)
-	// router.Use(middleware.Authentication())
 
-	// routes.FoodRoutes(router)
-	// routes.MenuRoutes(router)
+	routes.FoodRoutes(router)
+	routes.MenuRoutes(router)
 	// routes.TableRoutes(router)
 	// routes.OrderRoutes(router)
 	// routes.OrderItemRoutes(router)
