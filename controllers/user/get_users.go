@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 	"net/http"
+	collection "restaurant_management/controllers/collections"
 	helper "restaurant_management/helpers"
 	"strconv"
 	"time"
@@ -43,7 +44,7 @@ func GetUsers() gin.HandlerFunc {
 				{Key: "_id", Value: 0},
 				{Key: "total_count", Value: 1},
 				{Key: "user_items", Value: bson.D{{Key: "$slice", Value: []interface{}{"$data", startIndex, recordPerPage}}}}}}}
-		result, err := userCollection.Aggregate(ctx, mongo.Pipeline{
+		result, err := collection.UserCollection.Aggregate(ctx, mongo.Pipeline{
 			matchStage, groupStage, projectStage})
 		defer cancel()
 		if err != nil {

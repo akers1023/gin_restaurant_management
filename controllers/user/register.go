@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	collection "restaurant_management/controllers/collections"
 	"restaurant_management/models"
 	"time"
 
@@ -57,7 +58,7 @@ func Register() gin.HandlerFunc {
 			return
 		}
 
-		count, err := userCollection.CountDocuments(ctx, bson.M{"email": user.Email})
+		count, err := collection.UserCollection.CountDocuments(ctx, bson.M{"email": user.Email})
 		if err != nil {
 			log.Panic(err)
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "error occurred while checking for the email"})
@@ -77,7 +78,7 @@ func Register() gin.HandlerFunc {
 		user.ID = primitive.NewObjectID()
 		user.User_id = user.ID.Hex()
 
-		_, insertErr := userCollection.InsertOne(ctx, user)
+		_, insertErr := collection.UserCollection.InsertOne(ctx, user)
 		if insertErr != nil {
 			msg := fmt.Sprintf("User item was not created")
 			c.JSON(http.StatusInternalServerError, gin.H{"error": msg})
