@@ -9,7 +9,6 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/go-playground/validator/v10"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -24,7 +23,7 @@ func CreateMenu() gin.HandlerFunc {
 			return
 		}
 
-		validationErr := validator.New().Struct(menu)
+		validationErr := collection.Validate.Struct(menu)
 		if validationErr != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": validationErr.Error()})
 			return
