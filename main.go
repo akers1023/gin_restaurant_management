@@ -4,7 +4,6 @@ import (
 	"log"
 	"os"
 
-	"restaurant_management/middleware"
 	"restaurant_management/routes"
 
 	"github.com/gin-gonic/gin"
@@ -29,7 +28,6 @@ func main() {
 
 	router := gin.New()
 	router.Use(gin.Logger())
-	router.Use(middleware.Authenticate())
 
 	routes.AuthRoutes(router)
 	routes.UserRoutes(router)
@@ -37,10 +35,10 @@ func main() {
 
 	routes.FoodRoutes(router)
 	routes.MenuRoutes(router)
-	// routes.TableRoutes(router)
-	// routes.OrderRoutes(router)
-	// routes.OrderItemRoutes(router)
-	// routes.InvoiceRoutes(router)
+	routes.TableRoutes(router)
+	routes.OrderRoutes(router)
+	routes.OrderItemRoutes(router)
+	routes.InvoiceRoutes(router)
 
 
 	// router được khởi chạy và lắng nghe trên cổng được xác định bởi biến port
