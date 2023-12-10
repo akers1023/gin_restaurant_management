@@ -21,7 +21,7 @@ func round(num float64) int {
 	return int(num + math.Copysign(0.5, num))
 }
 
-func toFixed(num float64, precision int) float64 {
+func ToFixed(num float64, precision int) float64 {
 	output := math.Pow(10, float64(precision))
 	return float64(round(num*output)) / output
 }
@@ -54,7 +54,7 @@ func CreateFood() gin.HandlerFunc {
 		food.Updated_at, _ = time.Parse(time.RFC3339, time.Now().Format(time.RFC3339))
 		food.ID = primitive.NewObjectID()
 		food.Food_id = food.ID.Hex()
-		var num = toFixed(*food.Price, 2)
+		var num = ToFixed(*food.Price, 2)
 		food.Price = &num
 
 		result, insertErr := collection.FoodCollection.InsertOne(ctx, food)

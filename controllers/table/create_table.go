@@ -12,36 +12,40 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func CreateMenu() gin.HandlerFunc {
+func CreateTable() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var menu models.Menu
 		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
 		defer cancel()
-		
-		if err := c.BindJSON(&menu); err != nil {
+
+		var table models.Table
+
+		if err := c.BindJSON(&table); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
 
-		validationErr := collection.Validate.Struct(menu)
+		validationErr := collection.Validate.Struct(table)
+
 		if validationErr != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": validationErr.Error()})
 			return
 		}
 
-		menu.Created_at, _ = time.Parse(time.RFC3339, time.Now().Format(time.RFC3339))
-		menu.Updated_at, _ = time.Parse(time.RFC3339, time.Now().Format(time.RFC3339))
-		menu.ID = primitive.NewObjectID()
-		menu.Menu_id = menu.ID.Hex()
+		table.Created_at, _ = time.Parse(time.RFC3339, time.Now().Format(time.RFC3339))
+		table.Updated_at, _ = time.Parse(time.RFC3339, time.Now().Format(time.RFC3339))
 
-		result, insertErr := collection.MenuCollection.InsertOne(ctx, menu)
+		table.ID = primitive.NewObjectID()
+		table.Table_id = table.ID.Hex()
+
+		result, insertErr := collection.TableCollection.InsertOne(ctx, table)
+
 		if insertErr != nil {
-			msg := fmt.Sprintf("Menu item was not created")
+			msg := fmt.Sprintf("Table item was not created")
 			c.JSON(http.StatusInternalServerError, gin.H{"error": msg})
 			return
 		}
-		defer cancel()
+
 		c.JSON(http.StatusOK, result)
-		defer cancel()
+
 	}
 }
